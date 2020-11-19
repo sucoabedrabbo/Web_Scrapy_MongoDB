@@ -37,7 +37,7 @@ class web(CrawlSpider):
 
 
         self.item_count += 1  # contador
-        if self.item_count >10:  #limite de cuentas paginas hacemos scraping
+        if self.item_count >2:  #limite de cuentas paginas hacemos scraping
             raise CloseSpider('item_exceeded')
         yield web_item
 
