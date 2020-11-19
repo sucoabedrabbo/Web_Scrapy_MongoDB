@@ -22,6 +22,6 @@ class WebPipeline(object):
         for data in item:
             if not data:
                 raise DropItem("Missing data!")
-        self.collection.update({'salario': item['salario']}, dict(item), upsert=True)
+        self.collection.update({'index' : 'salario'}, dict(item), upsert=True)
         return item
 
