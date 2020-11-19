@@ -11,7 +11,7 @@ class web(CrawlSpider):
     start_urls = ['https://www.computrabajo.com.ec/ofertas-de-trabajo/?p=1']
 
     rules = {
-        Rule(LinkExtractor(allow =(),restrict_xpaths =  ('//li[@class="siguiente"]/a'))), #Regla para la siguiente pagina
+        Rule(LinkExtractor(allow =(),restrict_xpaths =  ('//*[@id="nextPage"]'))), #Regla para la siguiente pagina
         Rule(LinkExtractor(allow =(),restrict_xpaths =  ('//h2')),callback= 'parse_item',follow = False) #Regla para que entre en cada trabajo
     }
 
@@ -20,6 +20,7 @@ class web(CrawlSpider):
         dic = {} # diccionario de informacion de requerimientos
         #importamos la informacion
 
+        web_item['_id'] = response.request.url.split('-')[-1]
         web_item['titulo']  = response.xpath('normalize-space(//*[@id="MainContainer"]/article/section[1]/header/h1/text())').extract_first()
         web_item['empresa'] = response.xpath('normalize-space(//*[@id="urlverofertas"])').extract()[0]
         web_item['descripcion'] = response.xpath('normalize-space(//*[@id="MainContainer"]/article/section[1]/div[2]/ul/li[2])').extract()[0]
@@ -28,7 +29,7 @@ class web(CrawlSpider):
             cadena = response.xpath('normalize-space(//*[@id="MainContainer"]/article/section[1]/div[2]/ul/li[{}])'.format(index)).extract()
             frase = cadena[0].split(':')
             if len(frase) == 2:
-                dic[frase[0]] = frase[1]
+                dic[frase[0]] = frase[1].lstrip()
 
         web_item['requerimientos'] = dic
 
@@ -46,7 +47,7 @@ class web(CrawlSpider):
 
 
         self.item_count += 1  # contador
-        if self.item_count >6:  #limite de cuentas paginas hacemos scraping
+        if self.item_count >1000:  #limite de cuentas paginas hacemos scraping
             raise CloseSpider('item_exceeded')
         yield web_item
 

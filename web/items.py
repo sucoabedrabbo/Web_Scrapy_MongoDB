@@ -14,6 +14,7 @@ class WebItem(scrapy.Item):
     titulo = scrapy.Field()
 
     #Informacion dentro de cada item
+    _id = scrapy.Field()
     descripcion = scrapy.Field()
     localizacion = scrapy.Field()
     jornada = scrapy.Field()
